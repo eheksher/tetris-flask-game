@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>טטריס Flask</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="header">
+    <h1>🎮 טטריס</h1>
+    <div class="stats">
+      <div>ניקוד: <span id="score">0</span></div>
+      <div>שורות: <span id="lines">0</span></div>
+      <div>רמה: <span id="level">1</span></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="side">
+      <h3>הבא</h3>
+      <canvas id="next" width="120" height="120" aria-label="next piece"></canvas>
+
+      <h3>החזק (C)</h3>
+      <canvas id="hold" width="120" height="120" aria-label="hold piece"></canvas>
+
+      <div class="highscores">
+        <h3>שיאים</h3>
+        <ol id="hiscores"></ol>
+      </div>
+    </section>
+
+    <section class="stage">
+      <canvas id="tetris" width="240" height="400" aria-label="tetris board"></canvas>
+
+      <div class="controls">
+        <button id="btn-left">⬅︎</button>
+        <button id="btn-rotate">⟳</button>
+        <button id="btn-right">➡︎</button>
+        <button id="btn-down">⬇︎</button>
+        <button id="btn-drop">⤓</button>
+        <button id="btn-hold">HOLD</button>
+        <button id="btn-pause">⏯</button>
+        <button id="btn-restart">↻</button>
+      </div>
+
+      <details class="help">
+        <summary>מקלדת</summary>
+        <ul>
+          <li>חצים ← → להזזה</li>
+          <li>חץ ↓ להאצה</li>
+          <li>רווח — Hard Drop</li>
+          <li>Q / E — סיבוב שמאלה/ימינה</li>
+          <li>C — Hold</li>
+          <li>P — Pause, R — Restart</li>
+        </ul>
+      </details>
+    </section>
+  </main>
+
+  <footer class="footer">
+    נבנה ב־Flask + HTML/JS/CSS
+  </footer>
+
+  <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>

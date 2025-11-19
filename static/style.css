@@ -1,0 +1,64 @@
+:root {
+  --bg: #0e0f13;
+  --panel: #171923;
+  --accent: #5eead4;
+  --text: #f1f5f9;
+  --muted: #9aa3af;
+  --border: #2a2f3a;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 70% -10%, #18202a 0%, var(--bg) 60%);
+  color: var(--text);
+  font-family: "Rubik", system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.header, .footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; background: rgba(23, 25, 35, .6); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+.footer { border-top: 1px solid var(--border); border-bottom: none; justify-content: center; }
+
+.stats { display: flex; gap: 18px; color: var(--muted); }
+.stats div span { color: var(--text); font-weight: 700; }
+
+.layout {
+  display: grid; grid-template-columns: 220px 1fr; gap: 20px; padding: 18px; max-width: 980px; margin: 0 auto; width: 100%;
+}
+.side, .stage {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+h1, h3 { margin: 0 0 10px; }
+h3 { color: var(--accent); }
+
+canvas { display: block; background: #0b0d12; border: 1px solid #10131a; border-radius: 10px; margin-bottom: 12px; }
+
+.controls {
+  margin-top: 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
+}
+.controls button {
+  padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: #1d2230; color: var(--text); cursor: pointer; font-weight: 600;
+  transition: transform .06s ease, background .2s ease;
+}
+.controls button:active { transform: scale(.98); }
+.controls button:hover { background: #232a3b; }
+
+.highscores ol { margin: 0; padding-inline-start: 20px; }
+.highscores li { color: var(--muted); }
+
+.help { margin-top: 8px; color: var(--muted); }
+.help summary { cursor: pointer; color: var(--text); }
+
+@media (max-width: 840px) {
+  .layout { grid-template-columns: 1fr; }
+  .controls { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
