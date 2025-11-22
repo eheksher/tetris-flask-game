@@ -2,66 +2,123 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>טטריס Flask</title>
+
+  <!-- CSS הראשי -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header class="header">
-    <h1>🎮 טטריס</h1>
-    <div class="stats">
-      <div>ניקוד: <span id="score">0</span></div>
-      <div>שורות: <span id="lines">0</span></div>
-      <div>רמה: <span id="level">1</span></div>
-    </div>
-  </header>
 
-  <main class="layout">
-    <section class="side">
-      <h3>הבא</h3>
-      <canvas id="next" width="120" height="120" aria-label="next piece"></canvas>
+  <div class="main">
 
-      <h3>החזק (C)</h3>
-      <canvas id="hold" width="120" height="120" aria-label="hold piece"></canvas>
+    <!-- צד לוח המשחק -->
+    <div class="board-wrapper">
 
-      <div class="highscores">
-        <h3>שיאים</h3>
-        <ol id="hiscores"></ol>
+      <!-- כותרת + סטטיסטיקות -->
+      <header class="card header">
+        <h1>🎮 טטריס אונליין</h1>
+        <div class="stats">
+          <div>
+            <span class="label">נקודות:</span>
+            <span id="score">0</span>
+          </div>
+          <div>
+            <span class="label">שורות:</span>
+            <span id="lines">0</span>
+          </div>
+          <div>
+            <span class="label">רמה:</span>
+            <span id="level">1</span>
+          </div>
+        </div>
+
+        <div class="player-name">
+          שחקן:
+          <input id="playerName" maxlength="12" placeholder="שם (לא חובה)" />
+        </div>
+      </header>
+
+      <!-- לוח המשחק עצמו -->
+      <div class="card canvas-frame">
+        <canvas id="tetris"
+                width="240"
+                height="400"
+                aria-label="לוח טטריס"
+                role="img">
+        </canvas>
       </div>
-    </section>
 
-    <section class="stage">
-      <canvas id="tetris" width="240" height="400" aria-label="tetris board"></canvas>
-
-      <div class="controls">
-        <button id="btn-left">⬅︎</button>
-        <button id="btn-rotate">⟳</button>
-        <button id="btn-right">➡︎</button>
-        <button id="btn-down">⬇︎</button>
-        <button id="btn-drop">⤓</button>
-        <button id="btn-hold">HOLD</button>
-        <button id="btn-pause">⏯</button>
-        <button id="btn-restart">↻</button>
+      <!-- הוראות מקלדת -->
+      <div class="card">
+        <h3>שליטה במקלדת</h3>
+        <p>
+          ⬅ ➡ להזזת הצורה · ⬇ הורדה רכה ·
+          <strong>רווח</strong> – נפילה מהירה<br>
+          <strong>Q / E</strong> – סיבוב שמאל / ימין ·
+          <strong>C</strong> – החזקת צורה ·
+          <strong>P</strong> – הפעלה / Pause ·
+          <strong>R</strong> – התחלה מחדש
+        </p>
       </div>
 
-      <details class="help">
-        <summary>מקלדת</summary>
-        <ul>
-          <li>חצים ← → להזזה</li>
-          <li>חץ ↓ להאצה</li>
-          <li>רווח — Hard Drop</li>
-          <li>Q / E — סיבוב שמאלה/ימינה</li>
-          <li>C — Hold</li>
-          <li>P — Pause, R — Restart</li>
+      <!-- כפתורי טאץ' למובייל -->
+      <div class="card mobile-controls">
+        <h3>כפתורי טאץ׳ (מובייל)</h3>
+        <div class="controls-row">
+          <button id="btn-left"   class="btn">⬅ שמאלה</button>
+          <button id="btn-right"  class="btn">➡ ימינה</button>
+          <button id="btn-down"   class="btn">⬇ לאט</button>
+          <button id="btn-drop"   class="btn">⏬ נפילה</button>
+        </div>
+        <div class="controls-row">
+          <button id="btn-rotate"  class="btn">⟳ סיבוב</button>
+          <button id="btn-hold"    class="btn btn-secondary">⏸ החזק</button>
+          <button id="btn-pause"   class="btn btn-secondary">⏯ פאוז</button>
+          <button id="btn-restart" class="btn btn-secondary">🔁 רסט</button>
+        </div>
+      </div>
+
+    </div><!-- /board-wrapper -->
+
+    <!-- פאנל צדדי: הבא/הולד + ניקוד -->
+    <div class="side-panel" style="flex:1; display:flex; flex-direction:column; gap:12px;">
+
+      <!-- הצורה הבאה + שימור -->
+      <div class="card">
+        <h3>הבא</h3>
+        <canvas id="next"
+                width="120"
+                height="120"
+                aria-label="הצורה הבאה">
+        </canvas>
+
+        <h3 style="margin-top:16px;">שמורה (C)</h3>
+        <canvas id="hold"
+                width="120"
+                height="120"
+                aria-label="צורה שמורה">
+        </canvas>
+      </div>
+
+      <!-- ניקוד מקומי ואונליין -->
+      <div class="card">
+        <h3>ניקוד מקומי (בדפדפן)</h3>
+        <ul id="hiscores" class="hiscores">
+          <!-- מתמלא ב-JS -->
         </ul>
-      </details>
-    </section>
-  </main>
 
-  <footer class="footer">
-    נבנה ב־Flask + HTML/JS/CSS
-  </footer>
+        <h3 style="margin-top:14px;">טופ 10 אונליין</h3>
+        <ul id="online-scores" class="online-scores">
+          <!-- מתמלא ב-JS -->
+        </ul>
+      </div>
 
-  <script src="{{ url_for('static', filename='game.js') }}"></script>
+    </div><!-- /side-panel -->
+
+  </div><!-- /main -->
+
+  <!-- קובץ המשחק -->
+  <script src="{{ url_for('static', filename='game.js') }}" defer></script>
 </body>
 </html>
