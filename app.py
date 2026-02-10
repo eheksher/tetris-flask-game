@@ -88,10 +88,13 @@ def api_post_score():
     """
     payload = request.get_json() or {}
     name = (payload.get("name") or "שחקן").strip() or "שחקן"
+    name = name[:30]  # הגבלת אורך שם שחקן
     try:
         score = int(payload.get("score") or 0)
     except (TypeError, ValueError):
         return jsonify({"ok": False, "error": "invalid score"}), 400
+    if score < 0 or score > 10_000_000:
+        return jsonify({"ok": False, "error": "score out of range"}), 400
 
     conn = get_db_conn()
     if conn is None:
