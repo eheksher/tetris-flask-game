@@ -427,10 +427,34 @@ document.addEventListener("keydown", e => {
   }
 });
 
+// --- Ghost piece (drop preview) ---
+function getGhostPos() {
+  const ghost = { x: player.pos.x, y: player.pos.y };
+  while (!collide(arena, { matrix: player.matrix, pos: { x: ghost.x, y: ghost.y + 1 } })) {
+    ghost.y++;
+  }
+  return ghost;
+}
+
+function drawGhost(ctx, matrix, ghostPos) {
+  matrix.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value !== 0) {
+        ctx.fillStyle = "rgba(255,255,255,0.15)";
+        ctx.fillRect(x + ghostPos.x, y + ghostPos.y, 1, 1);
+        ctx.lineWidth = 0.05;
+        ctx.strokeStyle = "rgba(255,255,255,0.3)";
+        ctx.strokeRect(x + ghostPos.x, y + ghostPos.y, 1, 1);
+      }
+    });
+  });
+}
+
 // --- Draw loops ---
 function drawBoard() {
   clearCanvas(boardCtx, boardCanvas.width / 20, boardCanvas.height / 20);
   drawMatrix(boardCtx, arena, { x: 0, y: 0 });
+  drawGhost(boardCtx, player.matrix, getGhostPos());
   drawMatrix(boardCtx, player.matrix, player.pos);
 }
 
@@ -557,9 +581,12 @@ async function fetchTopScoresServer() {
     const res = await fetch("/api/scores");
     if (!res.ok) return;
     const data = await res.json();
-    $onlineScores.innerHTML = data
-      .map((r, i) => `<li>${i + 1}. ${r.name} – ${r.score}</li>`)
-      .join("");
+    $onlineScores.innerHTML = "";
+    data.forEach((r, i) => {
+      const li = document.createElement("li");
+      li.textContent = `${i + 1}. ${r.name} – ${r.score.toLocaleString()}`;
+      $onlineScores.appendChild(li);
+    });
   } catch (err) {
     console.warn("fetchTopScoresServer failed:", err);
   }
